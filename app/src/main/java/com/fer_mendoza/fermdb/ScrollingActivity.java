@@ -1,5 +1,6 @@
 package com.fer_mendoza.fermdb;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,6 +9,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import com.fer_mendoza.fermdb.utils.ApiTask;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
 
 public class ScrollingActivity extends AppCompatActivity {
 
@@ -17,6 +25,7 @@ public class ScrollingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_scrolling);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        HashMap<String, String> params = new HashMap<>();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -26,6 +35,11 @@ public class ScrollingActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        params.put("api_key", getApplicationContext().getString(R.string.THE_MOVIE_DB_API_TOKEN));
+
+        new ApiTask().execute(ApiTask.parseURL("api.themoviedb.org/3/movie/550", params));
+
     }
 
     @Override
