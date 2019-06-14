@@ -1,5 +1,6 @@
 package com.fer_mendoza.fermdb;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,15 +10,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
-import com.fer_mendoza.fermdb.utils.ApiTask;
+import com.fer_mendoza.fermdb.utils.NetworkUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class ScrollingActivity extends AppCompatActivity {
+
+    public String jsonString = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +44,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
         params.put("api_key", getApplicationContext().getString(R.string.THE_MOVIE_DB_API_TOKEN));
 
-        new ApiTask().execute(ApiTask.parseURL("api.themoviedb.org/3/movie/550", params));
+        new ApiTask().execute(NetworkUtils.parseURL("api.themoviedb.org/3/movie/550", params));
 
     }
 
@@ -62,4 +68,41 @@ public class ScrollingActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    class ApiTask extends AsyncTask<URL, Void, String> {
+
+        @Override
+        protected String doInBackground(URL... urls) {
+            HttpURLConnection urlConnection = null;
+
+            try {
+                urlConnection = (HttpURLConnection) urls[0].openConnection();
+                InputStream in = urlConnection.getInputStream();
+
+                Scanner scanner = new Scanner(in);
+                scanner.useDelimiter("\\A");
+
+                boolean hasInput = scanner.hasNext();
+                if (hasInput) {
+                    return scanner.next();
+                } else {
+                    return null;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            } finally {
+                urlConnection.disconnect();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if(s != null && !s.isEmpty()){
+                System.out.println("s = " + s);
+                jsonString = s;
+            }
+        }
+    }
 }
+
