@@ -10,8 +10,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.fer_mendoza.fermdb.utils.NetworkUtils;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,8 +49,9 @@ public class ScrollingActivity extends AppCompatActivity {
         });
 
         params.put("api_key", getApplicationContext().getString(R.string.THE_MOVIE_DB_API_TOKEN));
+        params.put("sort_by","popularity.desc");
 
-        new ApiTask().execute(NetworkUtils.parseURL("api.themoviedb.org/3/movie/550", params));
+        new ApiTask().execute(NetworkUtils.parseURL("api.themoviedb.org/3/discover/movie", params));
 
     }
 
@@ -99,10 +106,30 @@ public class ScrollingActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             if(s != null && !s.isEmpty()){
-                System.out.println("s = " + s);
                 jsonString = s;
+                parseMovies();
             }
         }
+    }
+
+    public void parseMovies() {
+        JSONObject movieDataJson = null;
+        TextView movieContent = findViewById(R.id.welcome_text);
+        try {
+            movieDataJson = new JSONObject(jsonString);
+            JSONArray movieDataArray = movieDataJson.getJSONArray("results");
+            for(int i=0; i < movieDataArray.length();i++){
+                String title = movieDataArray.getJSONObject(i).getString("title");
+                String poster_path = movieDataArray.getJSONObject(i).getString("poster_path");
+
+                movieContent.setText(movieContent.getText() + " " +title);
+//                Picasso.get().load("https://image.tmdb.org/t/p/w185" + poster_path).into(imageView);
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 }
 
