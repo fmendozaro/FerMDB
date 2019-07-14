@@ -1,6 +1,5 @@
 package com.fer_mendoza.fermdb;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,7 +12,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.fer_mendoza.fermdb.utils.NetworkUtils;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,19 +20,18 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class ScrollingActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     public String jsonString = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scrolling);
+        setContentView(R.layout.main_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         HashMap<String, String> params = new HashMap<>();
