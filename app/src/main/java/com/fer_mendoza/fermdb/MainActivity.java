@@ -1,14 +1,23 @@
 package com.fer_mendoza.fermdb;
 
+import android.app.AlertDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Adapter;
 import android.widget.TextView;
 
 import com.fer_mendoza.fermdb.utils.NetworkUtils;
@@ -21,12 +30,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
     public String jsonString = "";
+    private RecyclerView movieList;
+    private MovieAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +57,11 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        movieList = (RecyclerView) findViewById(R.id.movie_list_container);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        movieList.setLayoutManager(layoutManager);
+        movieList.setHasFixedSize(true);
 
         params.put("api_key", getApplicationContext().getString(R.string.THE_MOVIE_DB_API_TOKEN));
         params.put("sort_by","popularity.desc");
@@ -111,22 +129,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void parseMovies() {
         JSONObject movieDataJson = null;
-        TextView movieContent = findViewById(R.id.welcome_text);
         try {
             movieDataJson = new JSONObject(jsonString);
             JSONArray movieDataArray = movieDataJson.getJSONArray("results");
-            for(int i=0; i < movieDataArray.length();i++){
-                String title = movieDataArray.getJSONObject(i).getString("title");
-                String poster_path = movieDataArray.getJSONObject(i).getString("poster_path");
-
-                movieContent.setText(movieContent.getText() + " " +title);
-//                Picasso.get().load("https://image.tmdb.org/t/p/w185" + poster_path).into(imageView);
-
-            }
+            mAdapter = new MovieAdapter(10, movieDataArray);
+            movieList.setAdapter(mAdapter);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
     }
+
 }
 
