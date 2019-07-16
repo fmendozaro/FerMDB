@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     public String jsonString = "";
     private RecyclerView movieList;
     private MovieAdapter mAdapter;
+    private HashMap<String, String> params = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,16 +48,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        HashMap<String, String> params = new HashMap<>();
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         movieList = (RecyclerView) findViewById(R.id.movie_list_container);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -65,9 +56,12 @@ public class MainActivity extends AppCompatActivity {
 
         params.put("api_key", getApplicationContext().getString(R.string.THE_MOVIE_DB_API_TOKEN));
         params.put("sort_by","popularity.desc");
+        getMoviesData();
 
+    }
+
+    public void getMoviesData(){
         new ApiTask().execute(NetworkUtils.parseURL("api.themoviedb.org/3/discover/movie", params));
-
     }
 
     @Override
@@ -85,9 +79,12 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.popular) {
+            params.put("sort_by","popularity.desc");
+        }else if (id == R.id.rating){
+            params.put("sort_by","rated.asc");
         }
+        getMoviesData();
         return super.onOptionsItemSelected(item);
     }
 

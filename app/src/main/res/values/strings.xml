@@ -3,6 +3,7 @@
     <string name="large_text">
         "Welcome to the FerMDB"
     </string>
-    <string name="action_settings">Settings</string>
+    <string name="action_sort_rate">Best rated</string>
+    <string name="action_sort_pop">Most popular</string>
     <string name="post_for_each_movie">post for each movie</string>
 </resources>
