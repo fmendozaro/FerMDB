@@ -1,6 +1,7 @@
 package com.fer_mendoza.fermdb;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
@@ -115,14 +117,23 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
          * use that integer to display the appropriate text within a list item.
          * @param listIndex Position of the item in the list
          */
-        void bind(int listIndex) {
+        void bind(final int listIndex) {
             try {
-                String poster_path = "http://image.tmdb.org/t/p/w500"+movieDataArray.getJSONObject(listIndex).getString("poster_path");
-                System.out.println("poster_path = " + poster_path);
+
+                final JSONObject movieData = movieDataArray.getJSONObject(listIndex);
+                String posterPath = "http://image.tmdb.org/t/p/w500" + movieData.getString("poster_path");
+                listItemPosterView.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        Intent intent = new Intent(v.getContext(), MovieDetailActivity.class);
+                        intent.putExtra("movieData", movieData.toString());
+                        v.getContext().startActivity(intent);
+                    }
+                });
+
                 Picasso
-                        .get().load(poster_path)
+                        .get().load(posterPath)
                         .into(listItemPosterView);
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 

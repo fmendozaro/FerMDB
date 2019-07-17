@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.popular) {
             params.put("sort_by","popularity.desc");
         }else if (id == R.id.rating){
-            params.put("sort_by","rated.asc");
+            params.put("sort_by","vote_average.asc");
         }
         getMoviesData();
         return super.onOptionsItemSelected(item);
