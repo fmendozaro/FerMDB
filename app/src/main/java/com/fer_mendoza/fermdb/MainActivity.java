@@ -10,6 +10,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.fer_mendoza.fermdb.utils.NetworkUtils;
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.JustifyContent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,9 +40,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         movieList = (RecyclerView) findViewById(R.id.movie_list_container);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this);
+        layoutManager.setFlexDirection(FlexDirection.ROW);
+        layoutManager.setJustifyContent(JustifyContent.SPACE_AROUND);
         movieList.setLayoutManager(layoutManager);
-        movieList.setHasFixedSize(true);
 
         params.put("api_key", getApplicationContext().getString(R.string.THE_MOVIE_DB_API_TOKEN));
         getMoviesData("popular");

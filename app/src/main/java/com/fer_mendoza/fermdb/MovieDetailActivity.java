@@ -28,6 +28,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         Intent intentClicked = getIntent();
         TextView title = findViewById(R.id.movie_title);
         TextView desc = findViewById(R.id.movie_description);
+        TextView rating = findViewById(R.id.movie_rating);
+        TextView release = findViewById(R.id.movie_release);
         ImageView poster = findViewById(R.id.movie_poster);
         
         if(intentClicked.hasExtra("movieData")){
@@ -36,13 +38,11 @@ public class MovieDetailActivity extends AppCompatActivity {
                 JSONObject movieData = new JSONObject(jsonArray);
                 String posterPath = "http://image.tmdb.org/t/p/w500" + movieData.getString("poster_path");
 
-//                toolbar.setTitle(movieData.getString("title"));
-                title.setText("FerMDB");
+                title.setText(movieData.getString("title"));
                 desc.setText(movieData.getString("overview"));
-                // release date
-                // vote average
-                // trailer and users reviews
-//                toolbar.setSubtitle(movieData.getString("title"));
+                rating.setText("Average Rating: " + movieData.getString("vote_average"));
+                release.setText("Release Date: " + movieData.getString("release_date"));
+                // stage 2:  trailer and users reviews
                 Picasso.get().load(posterPath).into(poster);
             } catch (JSONException e) {
                 e.printStackTrace();

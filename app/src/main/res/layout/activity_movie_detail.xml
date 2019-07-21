@@ -1,32 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.flexbox.FlexboxLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context=".MovieDetailActivity">
+    app:flexWrap="wrap"
+    app:flexDirection="row"
+    app:justifyContent="space_evenly"
+    >
 
     <ImageView
         android:id="@+id/movie_poster"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        tools:srcCompat="@tools:sample/avatars[0]" />
+        app:layout_alignSelf="center"/>
 
     <TextView
         android:id="@+id/movie_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
-        android:layout_weight="1"
-        android:text="@string/large_text" />
+        android:fontFamily="cursive"
+        android:textFontWeight="15dp"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_alignSelf="center" />
+
+    <TextView
+        android:id="@+id/movie_release"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin" />
+
+    <TextView
+        android:id="@+id/movie_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin" />
 
     <TextView
         android:id="@+id/movie_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="TextView" />
+        android:layout_margin="@dimen/text_margin"/>
 
-</LinearLayout>
+</com.google.android.flexbox.FlexboxLayout>
