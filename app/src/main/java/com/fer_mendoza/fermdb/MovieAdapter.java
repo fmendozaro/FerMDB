@@ -122,6 +122,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
                 final JSONObject movieData = movieDataArray.getJSONObject(listIndex);
                 String posterPath = "http://image.tmdb.org/t/p/w500" + movieData.getString("poster_path");
+                System.out.println("posterPath = " + posterPath);
                 listItemPosterView.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         Intent intent = new Intent(v.getContext(), MovieDetailActivity.class);

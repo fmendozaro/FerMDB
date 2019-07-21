@@ -27,6 +27,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Intent intentClicked = getIntent();
         TextView title = findViewById(R.id.movie_title);
+        TextView desc = findViewById(R.id.movie_description);
         ImageView poster = findViewById(R.id.movie_poster);
         
         if(intentClicked.hasExtra("movieData")){
@@ -36,7 +37,11 @@ public class MovieDetailActivity extends AppCompatActivity {
                 String posterPath = "http://image.tmdb.org/t/p/w500" + movieData.getString("poster_path");
 
 //                toolbar.setTitle(movieData.getString("title"));
-//                toolbar.setTitle("FerMDB");
+                title.setText("FerMDB");
+                desc.setText(movieData.getString("overview"));
+                // release date
+                // vote average
+                // trailer and users reviews
 //                toolbar.setSubtitle(movieData.getString("title"));
                 Picasso.get().load(posterPath).into(poster);
             } catch (JSONException e) {

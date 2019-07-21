@@ -1,24 +1,13 @@
 package com.fer_mendoza.fermdb;
 
-import android.app.AlertDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Adapter;
-import android.widget.TextView;
 
 import com.fer_mendoza.fermdb.utils.NetworkUtils;
 
@@ -30,9 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,13 +42,12 @@ public class MainActivity extends AppCompatActivity {
         movieList.setHasFixedSize(true);
 
         params.put("api_key", getApplicationContext().getString(R.string.THE_MOVIE_DB_API_TOKEN));
-        params.put("sort_by","popularity.desc");
-        getMoviesData();
+        getMoviesData("popular");
 
     }
 
-    public void getMoviesData(){
-        new ApiTask().execute(NetworkUtils.parseURL("api.themoviedb.org/3/discover/movie", params));
+    public void getMoviesData(String segment){
+        new ApiTask().execute(NetworkUtils.parseURL("api.themoviedb.org/3/movie/"+segment, params));
     }
 
     @Override
@@ -77,14 +63,17 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        String segment = "";
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.popular) {
-            params.put("sort_by","popularity.desc");
+            getSupportActionBar().setTitle("Popular");
+            segment = "popular";
         }else if (id == R.id.rating){
-            params.put("sort_by","vote_average.asc");
+            getSupportActionBar().setTitle("Highest rated");
+            segment = "top_rated";
         }
-        getMoviesData();
+        getMoviesData(segment);
         return super.onOptionsItemSelected(item);
     }
 
