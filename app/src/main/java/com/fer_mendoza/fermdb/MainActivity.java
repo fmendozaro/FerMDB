@@ -25,9 +25,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
 
-    public String jsonString = "";
     private RecyclerView movieList;
     private MovieAdapter mAdapter;
     private HashMap<String, String> params = new HashMap<>();
@@ -50,8 +49,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onTaskCompleted(String jsonString) {
+        parseMovies(jsonString);
+    }
+
     public void getMoviesData(String segment){
-        new ApiTask().execute(NetworkUtils.parseURL("api.themoviedb.org/3/movie/"+segment, params));
+        ApiTask apiTask = new ApiTask(MainActivity.this);
+        apiTask.execute(NetworkUtils.parseURL("api.themoviedb.org/3/movie/"+segment, params));
     }
 
     @Override
@@ -81,43 +86,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    class ApiTask extends AsyncTask<URL, Void, String> {
-
-        @Override
-        protected String doInBackground(URL... urls) {
-            HttpURLConnection urlConnection = null;
-
-            try {
-                urlConnection = (HttpURLConnection) urls[0].openConnection();
-                InputStream in = urlConnection.getInputStream();
-
-                Scanner scanner = new Scanner(in);
-                scanner.useDelimiter("\\A");
-
-                boolean hasInput = scanner.hasNext();
-                if (hasInput) {
-                    return scanner.next();
-                } else {
-                    return null;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            } finally {
-                urlConnection.disconnect();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if(s != null && !s.isEmpty()){
-                jsonString = s;
-                parseMovies();
-            }
-        }
-    }
-
-    public void parseMovies() {
+    public void parseMovies(String jsonString) {
         JSONObject movieDataJson = null;
         try {
             movieDataJson = new JSONObject(jsonString);
