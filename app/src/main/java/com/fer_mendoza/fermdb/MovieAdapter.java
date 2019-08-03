@@ -9,18 +9,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.fer_mendoza.fermdb.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> implements OnTaskCompleted {
 
     private static final String TAG = MovieAdapter.class.getSimpleName();
     private static int viewHolderCount;
     private static JSONArray movieDataArray;
-
+    private JSONArray videos;
+    private JSONArray reviews;
     private int mNumberItems;
 
     /**
@@ -35,6 +37,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         // COMPLETED (9) When a new MovieAdapter is created, set the viewHolderCount to 0
         viewHolderCount = 0;
         movieDataArray = data;
+
     }
 
     /**
@@ -93,6 +96,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return mNumberItems;
     }
 
+    @Override
+    public void onTaskCompleted(String response) {
+
+    }
+
     /**
      * Cache of the children views for a list item.
      */
@@ -122,9 +130,17 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
                 final JSONObject movieData = movieDataArray.getJSONObject(listIndex);
                 String posterPath = "http://image.tmdb.org/t/p/w500" + movieData.getString("poster_path");
-                System.out.println("posterPath = " + posterPath);
+
                 listItemPosterView.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
+                        ApiTask getVideosTask = new ApiTask(MovieAdapter.this);
+                        ApiTask getReviewsTask = new ApiTask(MovieAdapter.this);
+                        try {
+                            getVideosTask.execute(NetworkUtils.parseURL(String.format("api.themoviedb.org/3/movie/%s/videos", movieData.getString("id")) ,null));
+                            getReviewsTask.execute(NetworkUtils.parseURL(String.format("api.themoviedb.org/3/movie/%s/reviews", movieData.getString("id")) ,null));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         Intent intent = new Intent(v.getContext(), MovieDetailActivity.class);
                         intent.putExtra("movieData", movieData.toString());
                         v.getContext().startActivity(intent);
