@@ -37,7 +37,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         // COMPLETED (9) When a new MovieAdapter is created, set the viewHolderCount to 0
         viewHolderCount = 0;
         movieDataArray = data;
-
     }
 
     /**
@@ -58,6 +57,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         int layoutIdForListItem = R.layout.movie_item;
         LayoutInflater inflater = LayoutInflater.from(context);
         boolean shouldAttachToParentImmediately = false;
+        params.put("api_key", context.getString(R.string.THE_MOVIE_DB_API_TOKEN));
 
         View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
         MovieViewHolder viewHolder = new MovieViewHolder(view);
@@ -136,8 +136,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
                         ApiTask getVideosTask = new ApiTask(MovieAdapter.this);
                         ApiTask getReviewsTask = new ApiTask(MovieAdapter.this);
                         try {
-                            getVideosTask.execute(NetworkUtils.parseURL(String.format("api.themoviedb.org/3/movie/%s/videos", movieData.getString("id")) ,null));
-                            getReviewsTask.execute(NetworkUtils.parseURL(String.format("api.themoviedb.org/3/movie/%s/reviews", movieData.getString("id")) ,null));
+                            getVideosTask.execute(NetworkUtils.parseURL(String.format("api.themoviedb.org/3/movie/%s/videos", movieData.getString("id")) ,params));
+                            getReviewsTask.execute(NetworkUtils.parseURL(String.format("api.themoviedb.org/3/movie/%s/reviews", movieData.getString("id")) ,params));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

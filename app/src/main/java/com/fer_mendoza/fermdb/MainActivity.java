@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
 
     private RecyclerView movieList;
     private MovieAdapter mAdapter;
-    private HashMap<String, String> params = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
