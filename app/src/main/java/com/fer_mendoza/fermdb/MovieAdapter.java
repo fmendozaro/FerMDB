@@ -16,13 +16,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> implements OnTaskCompleted {
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
     private static final String TAG = MovieAdapter.class.getSimpleName();
     private static int viewHolderCount;
     private static JSONArray movieDataArray;
-    private JSONArray videos;
-    private JSONArray reviews;
     private int mNumberItems;
 
     /**
@@ -57,7 +55,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         int layoutIdForListItem = R.layout.movie_item;
         LayoutInflater inflater = LayoutInflater.from(context);
         boolean shouldAttachToParentImmediately = false;
-        params.put("api_key", context.getString(R.string.THE_MOVIE_DB_API_TOKEN));
 
         View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
         MovieViewHolder viewHolder = new MovieViewHolder(view);
@@ -96,11 +93,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return mNumberItems;
     }
 
-    @Override
-    public void onTaskCompleted(String response) {
-
-    }
-
     /**
      * Cache of the children views for a list item.
      */
@@ -118,6 +110,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         public MovieViewHolder(View itemView) {
             super(itemView);
             listItemPosterView = (ImageView) itemView.findViewById(R.id.moviePosterView);
+//            video = (VideoView) findVfiewById(R.id.YoutubeVideoView);
         }
 
         /**
@@ -133,14 +126,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
                 listItemPosterView.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        ApiTask getVideosTask = new ApiTask(MovieAdapter.this);
-                        ApiTask getReviewsTask = new ApiTask(MovieAdapter.this);
-                        try {
-                            getVideosTask.execute(NetworkUtils.parseURL(String.format("api.themoviedb.org/3/movie/%s/videos", movieData.getString("id")) ,params));
-                            getReviewsTask.execute(NetworkUtils.parseURL(String.format("api.themoviedb.org/3/movie/%s/reviews", movieData.getString("id")) ,params));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
                         Intent intent = new Intent(v.getContext(), MovieDetailActivity.class);
                         intent.putExtra("movieData", movieData.toString());
                         v.getContext().startActivity(intent);

@@ -11,9 +11,11 @@ import java.util.Scanner;
 class ApiTask extends AsyncTask<URL, Void, String> {
 
     private OnTaskCompleted onTaskCompleted;
+    private String type;
 
-    ApiTask(OnTaskCompleted onTaskCompleted) {
+    ApiTask(OnTaskCompleted onTaskCompleted, String type) {
         this.onTaskCompleted = onTaskCompleted;
+        this.type = type;
     }
 
     @Override
@@ -44,7 +46,7 @@ class ApiTask extends AsyncTask<URL, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         if(s != null && !s.isEmpty()){
-            onTaskCompleted.onTaskCompleted(s);
+            onTaskCompleted.onTaskCompleted(s, this.type);
         }
     }
 }

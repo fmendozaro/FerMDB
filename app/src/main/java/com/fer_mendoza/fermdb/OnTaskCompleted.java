@@ -4,5 +4,5 @@ import java.util.HashMap;
 
 public interface OnTaskCompleted {
     HashMap<String, String> params = new HashMap<>();
-    void onTaskCompleted(String response);
+    void onTaskCompleted(String response, String type);
 }

@@ -1,9 +1,7 @@
 package com.fer_mendoza.fermdb;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -17,13 +15,6 @@ import com.google.android.flexbox.JustifyContent;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
 
@@ -49,12 +40,12 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
     }
 
     @Override
-    public void onTaskCompleted(String jsonString) {
+    public void onTaskCompleted(String jsonString, String type) {
         parseMovies(jsonString);
     }
 
     public void getMoviesData(String segment){
-        ApiTask apiTask = new ApiTask(MainActivity.this);
+        ApiTask apiTask = new ApiTask(MainActivity.this, "movie");
         apiTask.execute(NetworkUtils.parseURL("api.themoviedb.org/3/movie/"+segment, params));
     }
 
