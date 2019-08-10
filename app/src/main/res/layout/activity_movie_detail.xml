@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.flexbox.FlexboxLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.flexbox.FlexboxLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:flexDirection="column"
     app:flexWrap="wrap"
-    app:flexDirection="row"
-    app:justifyContent="space_evenly"
-    >
+    app:justifyContent="space_evenly">
 
     <ImageView
         android:id="@+id/movie_poster"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_alignSelf="center"/>
+        app:layout_alignSelf="center" />
 
     <TextView
         android:id="@+id/movie_title"
@@ -52,6 +50,12 @@
         android:id="@+id/movie_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"/>
+        android:layout_margin="@dimen/text_margin" />
+
+    <TextView
+        android:id="@+id/movie_reviews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin" />
 
 </com.google.android.flexbox.FlexboxLayout>

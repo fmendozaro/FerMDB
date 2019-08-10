@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,6 +16,9 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.fer_mendoza.fermdb.utils.NetworkUtils;
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.JustifyContent;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -26,41 +30,10 @@ import java.util.Arrays;
 public class MovieDetailActivity extends AppCompatActivity implements OnTaskCompleted {
 
     @Override
-    public void onTaskCompleted(String response, String type) {
-        try {
-            JSONObject movieData = new JSONObject(response);
-            final JSONArray dataArray = movieData.getJSONArray("results");
-            TextView movieTrailers = findViewById(R.id.movie_trailers);
-            switch (type){
-                case "videos":
-                    movieTrailers.setText("Trailer");
-                    movieTrailers.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            try {
-                                openWebsite("https://www.youtube.com/watch?v=" + dataArray.getJSONObject(0).getString("key"));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                    break;
-                case "reviews":
-
-                    break;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        params.put("api_key", getApplicationContext().getString(R.string.THE_MOVIE_DB_API_TOKEN));
-
         setContentView(R.layout.activity_movie_detail);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Intent intentClicked = getIntent();
@@ -101,5 +74,42 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTaskComp
         if(intent.resolveActivity(getPackageManager()) != null){
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onTaskCompleted(String response, String type) {
+        try {
+            JSONObject movieData = new JSONObject(response);
+            final JSONArray dataArray = movieData.getJSONArray("results");
+            TextView movieTrailers = findViewById(R.id.movie_trailers);
+            TextView reviewsTxt = findViewById(R.id.movie_reviews);
+            switch (type){
+                case "videos":
+                    movieTrailers.setText("Trailer");
+                    movieTrailers.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            try {
+                                openWebsite("https://www.youtube.com/watch?v=" + dataArray.getJSONObject(0).getString("key"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    break;
+                case "reviews":
+                    String reviewContent = "";
+                    for (int i=0; i < dataArray.length(); i++) {
+                        reviewContent += String.format("Author: %s \n" +
+                                "Review: %s", dataArray.getJSONObject(i).getString("author"), dataArray.getJSONObject(i).getString("content"));
+                    }
+                    reviewsTxt.setText("List of Reviews \n\n" +
+                            reviewContent);
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 }
