@@ -1,6 +1,7 @@
 package com.fer_mendoza.fermdb;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -19,29 +21,38 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
+
 public class MovieDetailActivity extends AppCompatActivity implements OnTaskCompleted {
 
     @Override
     public void onTaskCompleted(String response, String type) {
-        switch (type){
-            case "videos":
-//                VideoView v = (VideoView) findVfiewById(R.id.YoutubeVideoView);
-//
-//                v.setVideoURI(Uri.parse(“rtsp://v4.cache3.c.youtube.com/CjYLENy73wIaLQlW_ji2apr6AxMYDSANFEIJbXYtZ29vZ2xlSARSBXdhdGNoYOr_86Xm06e5UAw=/0/0/0/video.3gp”));
-//
-//                v.setMediaController(new MediaController(this)); //sets MediaController in the video view
-//
-//// MediaController containing controls for a MediaPlayer
-//
-//                v.requestFocus();//give focus to a specific view
-//
-//                v.start();//starts the video
+        try {
+            JSONObject movieData = new JSONObject(response);
+            final JSONArray dataArray = movieData.getJSONArray("results");
+            TextView movieTrailers = findViewById(R.id.movie_trailers);
+            switch (type){
+                case "videos":
+                    movieTrailers.setText("Trailer");
+                    movieTrailers.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            try {
+                                openWebsite("https://www.youtube.com/watch?v=" + dataArray.getJSONObject(0).getString("key"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                    break;
+                case "reviews":
 
-                break;
-            case "reviews":
-//                response.
-                break;
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
     }
 
     @Override
@@ -58,7 +69,6 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTaskComp
         TextView rating = findViewById(R.id.movie_rating);
         TextView release = findViewById(R.id.movie_release);
         ImageView poster = findViewById(R.id.movie_poster);
-        VideoView video = findViewById(R.id.movie_trailer);
         ApiTask getVideosTask = new ApiTask(this, "videos");
         ApiTask getReviewsTask = new ApiTask(this, "reviews");
 
@@ -83,5 +93,13 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTaskComp
             }
         }
 
+    }
+
+    public void openWebsite(String url){
+        Uri webpage = Uri.parse(url);
+        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+        if(intent.resolveActivity(getPackageManager()) != null){
+            startActivity(intent);
+        }
     }
 }
