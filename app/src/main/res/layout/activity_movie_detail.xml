@@ -1,61 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.flexbox.FlexboxLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:flexDirection="column"
-    app:flexWrap="wrap"
-    app:justifyContent="space_evenly">
+    android:fillViewport="true">
+    <com.google.android.flexbox.FlexboxLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:flexDirection="column"
+        app:flexWrap="wrap"
+        app:justifyContent="space_evenly">
 
-    <ImageView
-        android:id="@+id/movie_poster"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_alignSelf="center" />
+        <ImageView
+            android:id="@+id/movie_poster"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_alignSelf="center" />
 
-    <TextView
-        android:id="@+id/movie_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:fontFamily="cursive"
-        android:textFontWeight="15dp"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_alignSelf="center" />
+        <TextView
+            android:id="@+id/movie_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:fontFamily="cursive"
+            android:textFontWeight="15dp"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            app:layout_alignSelf="center" />
 
-    <Button
-        android:id="@+id/movie_trailers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:fontFamily="sans-serif"
-        android:textFontWeight="15dp"
-        android:textSize="12sp"
-        app:layout_alignSelf="center" />
+        <Button
+            android:id="@+id/movie_trailers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:fontFamily="sans-serif"
+            android:textFontWeight="15dp"
+            android:textSize="12sp"
+            app:layout_alignSelf="center" />
 
-    <TextView
-        android:id="@+id/movie_release"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin" />
+        <TextView
+            android:id="@+id/movie_release"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin" />
 
-    <TextView
-        android:id="@+id/movie_rating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin" />
+        <TextView
+            android:id="@+id/movie_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin" />
 
-    <TextView
-        android:id="@+id/movie_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin" />
+        <TextView
+            android:id="@+id/movie_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin" />
 
-    <TextView
-        android:id="@+id/movie_reviews"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin" />
+        <TextView
+            android:id="@+id/movie_reviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin" />
 
-</com.google.android.flexbox.FlexboxLayout>
+    </com.google.android.flexbox.FlexboxLayout>
+</ScrollView>

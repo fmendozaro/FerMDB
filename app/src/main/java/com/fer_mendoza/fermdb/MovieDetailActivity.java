@@ -34,6 +34,7 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTaskComp
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
 
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Intent intentClicked = getIntent();
