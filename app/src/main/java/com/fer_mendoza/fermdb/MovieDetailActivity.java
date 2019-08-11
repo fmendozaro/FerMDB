@@ -34,7 +34,6 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTaskComp
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
 
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Intent intentClicked = getIntent();
@@ -43,6 +42,8 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTaskComp
         TextView rating = findViewById(R.id.movie_rating);
         TextView release = findViewById(R.id.movie_release);
         ImageView poster = findViewById(R.id.movie_poster);
+        ImageView favBtn = findViewById(R.id.fav_movie);
+//        favBtn.setImageResource(R.drawable.);
         ApiTask getVideosTask = new ApiTask(this, "videos");
         ApiTask getReviewsTask = new ApiTask(this, "reviews");
 

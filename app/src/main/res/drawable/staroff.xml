@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<maskable-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--<item>-->
+        <!--<bitmap-->
+            <!--android:gravity="center"-->
+            <!--android:src="@mimap/icons/star-off.png" />-->
+    <!--</item>-->
+</maskable-icon>
