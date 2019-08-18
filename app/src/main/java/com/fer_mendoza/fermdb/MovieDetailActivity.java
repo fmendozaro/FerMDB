@@ -15,6 +15,7 @@ import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.fer_mendoza.fermdb.db.AppDb;
 import com.fer_mendoza.fermdb.utils.NetworkUtils;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
@@ -28,6 +29,8 @@ import org.json.JSONObject;
 import java.util.Arrays;
 
 public class MovieDetailActivity extends AppCompatActivity implements OnTaskCompleted {
+
+    private AppDb appDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,7 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTaskComp
         ImageView poster = findViewById(R.id.movie_poster);
         ImageView favBtn = findViewById(R.id.fav_movie);
 //        favBtn.setImageResource(R.drawable.);
+//        appDb.userDao().findOne(1);
         ApiTask getVideosTask = new ApiTask(this, "videos");
         ApiTask getReviewsTask = new ApiTask(this, "reviews");
 
