@@ -1,7 +1,8 @@
 package com.fer_mendoza.fermdb.db;
 
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 
 @Entity
 public class User {
@@ -19,6 +20,7 @@ public class User {
         this.password = password;
     }
 
+    @Ignore
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
