@@ -6,7 +6,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.util.Log;
 
-@Database(entities = {User.class}, version = 1, exportSchema = false)
+@Database(entities = {User.class, Favorite.class}, version = 1, exportSchema = false)
 public abstract class AppDb extends RoomDatabase {
     private static final String LOG_TAG = AppDb.class.getSimpleName();
     private static final Object LOCK = new Object();
@@ -26,4 +26,6 @@ public abstract class AppDb extends RoomDatabase {
     }
 
     public abstract UserDao userDao();
+
+    public abstract FavoriteDao favoriteDao();
 }
