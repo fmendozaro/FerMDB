@@ -3,6 +3,7 @@ package com.fer_mendoza.fermdb;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Intent;
+import android.database.sqlite.SQLiteConstraintException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fer_mendoza.fermdb.db.AppDb;
 import com.fer_mendoza.fermdb.db.Favorite;
@@ -60,23 +62,13 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTaskComp
                 desc.setText(movieData.getString("overview"));
                 rating.setText("Average Rating: " + movieData.getString("vote_average"));
                 release.setText("Release Date: " + movieData.getString("release_date"));
-                // stage 2:  trailer and users reviews
                 Picasso.get().load(posterPath).into(poster);
 
                 favBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        System.out.println("favBtn pressed");
                         try {
-                            final Favorite fav = new Favorite(Long.parseLong(movieData.getString("id")));
-                            AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                                @Override
-                                public void run() {
-                                    appDb.favoriteDao().insert(fav);
-                                    finish();
-                                }
-                            });
-
+                            saveFav(movieData.getString("id"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -96,6 +88,31 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTaskComp
         if(intent.resolveActivity(getPackageManager()) != null){
             startActivity(intent);
         }
+    }
+
+    public final void saveFav(String id){
+        String message;
+
+        // check if it's already a favorite
+        boolean isFav = false;
+
+        if(!isFav){
+
+            message = "Saved as favorite";
+            final Favorite fav = new Favorite(Long.parseLong(id));
+            AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    appDb.favoriteDao().insert(fav);
+                    finish();
+                }
+            });
+
+        } else {
+            // delete favorite movie
+            message = "Removed from favorites";
+        }
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

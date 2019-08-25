@@ -22,8 +22,9 @@
             android:id="@+id/fav_movie"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="@mipmap/ic_fav"
             app:layout_alignSelf="flex_end"
-            app:srcCompat="@drawable/ic_launcher_background" />
+            />
 
         <TextView
             android:id="@+id/movie_title"
