@@ -23,6 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/ic_fav"
+            android:alpha="0.3"
             app:layout_alignSelf="flex_end"
             />
 

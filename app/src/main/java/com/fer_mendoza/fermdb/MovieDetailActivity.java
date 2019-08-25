@@ -42,8 +42,7 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTaskComp
         TextView rating = findViewById(R.id.movie_rating);
         TextView release = findViewById(R.id.movie_release);
         ImageView poster = findViewById(R.id.movie_poster);
-        ImageView favBtn = findViewById(R.id.fav_movie);
-//        favBtn.setImageResource(R.drawable.);
+        final ImageView favBtn = findViewById(R.id.fav_movie);
 
         ApiTask getVideosTask = new ApiTask(this, "videos");
         ApiTask getReviewsTask = new ApiTask(this, "reviews");
@@ -52,6 +51,8 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTaskComp
             String jsonArray = intentClicked.getStringExtra("movieData");
             try {
                 final JSONObject movieData = new JSONObject(jsonArray);
+                final Long movieId = Long.parseLong(movieData.getString("id"));
+                final boolean[] isFav = {false};
 
                 getVideosTask.execute(NetworkUtils.parseURL(String.format("api.themoviedb.org/3/movie/%s/videos", movieData.getString("id")) ,params));
                 getReviewsTask.execute(NetworkUtils.parseURL(String.format("api.themoviedb.org/3/movie/%s/reviews", movieData.getString("id")) ,params));
@@ -64,14 +65,21 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTaskComp
                 release.setText("Release Date: " + movieData.getString("release_date"));
                 Picasso.get().load(posterPath).into(poster);
 
+                AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        isFav[0] = appDb.favoriteDao().findOne(movieId) != null;
+                        if(isFav[0]){
+                            findViewById(R.id.fav_movie).setAlpha(1f);
+                            return;
+                        }
+                    }
+                });
+
                 favBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        try {
-                            saveFav(movieData.getString("id"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        saveFav(movieId, isFav[0]);
                     }
                 });
 
@@ -90,29 +98,42 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTaskComp
         }
     }
 
-    public final void saveFav(String id){
-        String message;
+    public final void saveFav(final Long id, final boolean isFav){
+        final String[] message = new String[1];
 
-        // check if it's already a favorite
-        boolean isFav = false;
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("isFav = " + isFav);
+                if(!isFav){
+                    message[0] = "Saved as favorite";
+                    AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            appDb.favoriteDao().insert(new Favorite(id));
+                            findViewById(R.id.fav_movie).setAlpha(1f);
+                            return;
+                        }
+                    });
 
-        if(!isFav){
+                } else {
+                    // delete favorite movie
+                    message[0] = "Removed from favorites";
+                    AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            appDb.favoriteDao().delete(appDb.favoriteDao().findOne(id));
+                            findViewById(R.id.fav_movie).setAlpha(0.3f);
+                            return;
+                        }
+                    });
 
-            message = "Saved as favorite";
-            final Favorite fav = new Favorite(Long.parseLong(id));
-            AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                @Override
-                public void run() {
-                    appDb.favoriteDao().insert(fav);
-                    finish();
                 }
-            });
+                return;
+            }
+        });
 
-        } else {
-            // delete favorite movie
-            message = "Removed from favorites";
-        }
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), message[0], Toast.LENGTH_SHORT).show();
     }
 
     @Override
