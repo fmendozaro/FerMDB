@@ -64,22 +64,12 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTaskComp
                 rating.setText("Average Rating: " + movieData.getString("vote_average"));
                 release.setText("Release Date: " + movieData.getString("release_date"));
                 Picasso.get().load(posterPath).into(poster);
-
-                AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        isFav[0] = appDb.favoriteDao().findOne(movieId) != null;
-                        if(isFav[0]){
-                            findViewById(R.id.fav_movie).setAlpha(1f);
-                            return;
-                        }
-                    }
-                });
+                checkIfFav(movieId);
 
                 favBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        saveFav(movieId, isFav[0]);
+                        saveFav(movieId);
                     }
                 });
 
@@ -90,6 +80,22 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTaskComp
 
     }
 
+    private boolean checkIfFav(final Long movieId) {
+        final boolean[] result = {false};
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                if(appDb.favoriteDao().findOne(movieId) != null){
+                    findViewById(R.id.fav_movie).setAlpha(1f);
+                    result[0] = true;
+                    System.out.println("getMovieId = " + appDb.favoriteDao().findOne(movieId).getMovieId());
+                }
+            }
+        });
+
+        return result[0];
+    }
+
     public void openWebsite(String url){
         Uri webpage = Uri.parse(url);
         Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
@@ -98,32 +104,37 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTaskComp
         }
     }
 
-    public final void saveFav(final Long id, final boolean isFav){
-        final String[] message = new String[1];
-
+    public final void saveFav(final Long id){
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                System.out.println("isFav = " + isFav);
-                if(!isFav){
-                    message[0] = "Saved as favorite";
+                if(appDb.favoriteDao().findOne(id) == null){
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
                             appDb.favoriteDao().insert(new Favorite(id));
                             findViewById(R.id.fav_movie).setAlpha(1f);
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), "Saved in favorites", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                             return;
                         }
                     });
 
                 } else {
                     // delete favorite movie
-                    message[0] = "Removed from favorites";
                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
                             appDb.favoriteDao().delete(appDb.favoriteDao().findOne(id));
                             findViewById(R.id.fav_movie).setAlpha(0.3f);
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), "Removed from favorites", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                             return;
                         }
                     });
@@ -132,8 +143,6 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTaskComp
                 return;
             }
         });
-
-        Toast.makeText(getApplicationContext(), message[0], Toast.LENGTH_SHORT).show();
     }
 
     @Override
