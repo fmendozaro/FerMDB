@@ -69,8 +69,11 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
             getSupportActionBar().setTitle("Popular");
             segment = "popular";
         }else if (id == R.id.rating){
-            getSupportActionBar().setTitle("Highest rated");
+            getSupportActionBar().setTitle("Best rated");
             segment = "top_rated";
+        }else if (id == R.id.sort_fav){
+            getSupportActionBar().setTitle("Favorites");
+            segment = "sort_fav";
         }
         getMoviesData(segment);
         return super.onOptionsItemSelected(item);

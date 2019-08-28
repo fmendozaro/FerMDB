@@ -5,6 +5,7 @@
     </string>
     <string name="action_sort_rate">Best rated</string>
     <string name="action_sort_pop">Most popular</string>
+    <string name="action_sort_fav">Favorites</string>
     <string name="post_for_each_movie">post for each movie</string>
     <string name="title_activity_movie_detail">MovieDetailActivity</string>
     <string name="action_settings">Settings</string>
