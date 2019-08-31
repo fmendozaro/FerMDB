@@ -46,7 +46,7 @@ class ApiTask extends AsyncTask<URL, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         if(s != null && !s.isEmpty()){
-            onTaskCompleted.onTaskCompleted(s, this.type);
+            onTaskCompleted.onTaskCompleted(s, this.type, null);
         }
     }
 }

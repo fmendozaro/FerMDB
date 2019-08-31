@@ -24,6 +24,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class MovieDetailActivity extends AppCompatActivity implements OnTaskCompleted {
 
     private AppDb appDb;
@@ -146,7 +148,7 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTaskComp
     }
 
     @Override
-    public void onTaskCompleted(String response, String type) {
+    public void onTaskCompleted(String response, String type, ArrayList<String> favs) {
         try {
             JSONObject movieData = new JSONObject(response);
             final JSONArray dataArray = movieData.getJSONArray("results");

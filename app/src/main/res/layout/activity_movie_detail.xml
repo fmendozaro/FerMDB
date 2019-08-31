@@ -33,7 +33,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
             android:fontFamily="cursive"
-            android:textFontWeight="15dp"
             android:textSize="26sp"
             android:textStyle="bold"
             app:layout_alignSelf="center" />
@@ -44,7 +43,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
             android:fontFamily="sans-serif"
-            android:textFontWeight="15dp"
             android:textSize="12sp"
             app:layout_alignSelf="center" />
 

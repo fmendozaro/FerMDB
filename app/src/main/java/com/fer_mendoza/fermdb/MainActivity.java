@@ -16,6 +16,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
 
     private RecyclerView movieList;
@@ -40,8 +43,8 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
     }
 
     @Override
-    public void onTaskCompleted(String jsonString, String type) {
-        parseMovies(jsonString);
+    public void onTaskCompleted(String jsonString, String type, ArrayList<String> favs) {
+        parseMovies(jsonString, favs);
     }
 
     public void getMoviesData(String segment){
@@ -63,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         String segment = "";
+        ArrayList<String> favIdList = new ArrayList<>();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.popular) {
@@ -74,16 +78,34 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
         }else if (id == R.id.sort_fav){
             getSupportActionBar().setTitle("Favorites");
             segment = "sort_fav";
+            favIdList.add("278");
+            favIdList.add("238");
         }
         getMoviesData(segment);
         return super.onOptionsItemSelected(item);
     }
 
-    public void parseMovies(String jsonString) {
-        JSONObject movieDataJson = null;
+    public void parseMovies(String jsonString, ArrayList<String> favs) {
+        JSONObject movieDataJson;
         try {
             movieDataJson = new JSONObject(jsonString);
             JSONArray movieDataArray = movieDataJson.getJSONArray("results");
+            int favSize = favs!=null ? favs.size() : 0;
+            if(favSize > 0){
+                try {
+                    JSONArray filtered = new JSONArray();
+                    for (int i = 0; i < movieDataArray.length(); ++i) {
+                        JSONObject obj = movieDataArray.getJSONObject(i);
+                        String id = obj.getString("id");
+                        if (favs.contains(("1"))) {
+                            filtered.put(obj);
+                        }
+                    }
+                    movieDataArray = filtered;
+                } catch (JSONException e) {
+                    // handle exception
+                }
+            }
             mAdapter = new MovieAdapter(10, movieDataArray);
             movieList.setAdapter(mAdapter);
         } catch (JSONException e) {
