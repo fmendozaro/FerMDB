@@ -21,7 +21,7 @@ class ApiTask extends AsyncTask<URL, Void, String> {
     @Override
     protected String doInBackground(URL... urls) {
         HttpURLConnection urlConnection = null;
-
+        System.out.println("urls[0] = " + urls[0]);
         try {
             urlConnection = (HttpURLConnection) urls[0].openConnection();
             InputStream in = urlConnection.getInputStream();
@@ -46,7 +46,7 @@ class ApiTask extends AsyncTask<URL, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         if(s != null && !s.isEmpty()){
-            onTaskCompleted.onTaskCompleted(s, this.type, null);
+            onTaskCompleted.onTaskCompleted(s, this.type);
         }
     }
 }

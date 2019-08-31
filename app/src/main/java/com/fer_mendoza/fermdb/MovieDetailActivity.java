@@ -148,7 +148,7 @@ public class MovieDetailActivity extends AppCompatActivity implements OnTaskComp
     }
 
     @Override
-    public void onTaskCompleted(String response, String type, ArrayList<String> favs) {
+    public void onTaskCompleted(String response, String type) {
         try {
             JSONObject movieData = new JSONObject(response);
             final JSONArray dataArray = movieData.getJSONArray("results");
