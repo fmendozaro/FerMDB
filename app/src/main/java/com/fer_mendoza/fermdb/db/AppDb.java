@@ -26,6 +26,5 @@ public abstract class AppDb extends RoomDatabase {
     }
 
     public abstract UserDao userDao();
-
     public abstract FavoriteDao favoriteDao();
 }

@@ -7,6 +7,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.fer_mendoza.fermdb.db.AppDb;
+import com.fer_mendoza.fermdb.utils.AppExecutors;
 import com.fer_mendoza.fermdb.utils.NetworkUtils;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
 
     private RecyclerView movieList;
     private MovieAdapter mAdapter;
+    private AppDb appDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
         setContentView(R.layout.main_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        appDb = AppDb.getInstance(getApplicationContext());
 
         movieList = (RecyclerView) findViewById(R.id.movie_list_container);
         FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this);
@@ -52,9 +56,10 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
         apiTask.execute(NetworkUtils.parseURL("api.themoviedb.org/3/movie/"+segment, params));
     }
 
-    public void getMoviesData(List<String> ids){
-        for (String id : ids) {
-            getMoviesData(id);
+    public void getMoviesData(List<Long> ids){
+        for (long id : ids) {
+            System.out.println("getMoviesData id = " + id);
+            getMoviesData(String.valueOf(id));
         }
     }
 
@@ -72,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         String segment = "";
-        ArrayList<String> favIdList = new ArrayList<>();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.popular) {
@@ -83,9 +87,8 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
             segment = "top_rated";
         }else if (id == R.id.sort_fav){
             getSupportActionBar().setTitle("Favorites");
-            favIdList.add("278");
-            favIdList.add("238");
-            getMoviesData(favIdList);
+            System.out.println("favIdList.toString() = " + getFavList().toString());
+            getMoviesData(getFavList());
             return super.onOptionsItemSelected(item);
         }
         getMoviesData(segment);
@@ -103,6 +106,18 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
             e.printStackTrace();
         }
 
+    }
+
+    private List<Long> getFavList() {
+        final List<Long> favIdList = new ArrayList<>();
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                favIdList.addAll(appDb.favoriteDao().findAllIds());
+            }
+        });
+        System.out.println("getFavList after = " + favIdList);
+        return favIdList;
     }
 
 }

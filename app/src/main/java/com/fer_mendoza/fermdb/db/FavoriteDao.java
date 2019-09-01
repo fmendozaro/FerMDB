@@ -12,8 +12,8 @@ import java.util.List;
 @Dao
 public interface FavoriteDao {
 
-    @Query("SELECT * FROM favorites")
-    List<Favorite> findAll();
+    @Query("SELECT movieId FROM favorites")
+    List<Long> findAllIds();
 
     @Query("SELECT * FROM favorites WHERE movieId = :id")
     Favorite findOne(long id);
