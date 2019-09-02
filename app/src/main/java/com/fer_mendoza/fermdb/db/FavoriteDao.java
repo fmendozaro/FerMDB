@@ -1,5 +1,6 @@
 package com.fer_mendoza.fermdb.db;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -13,7 +14,7 @@ import java.util.List;
 public interface FavoriteDao {
 
     @Query("SELECT movieId FROM favorites")
-    List<Long> findAllIds();
+    LiveData<List<Long>> findAllIds();
 
     @Query("SELECT * FROM favorites WHERE movieId = :id")
     Favorite findOne(long id);

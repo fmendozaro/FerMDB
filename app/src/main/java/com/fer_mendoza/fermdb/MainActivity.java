@@ -1,6 +1,9 @@
 package com.fer_mendoza.fermdb;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +21,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
@@ -58,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
 
     public void getMoviesData(List<Long> ids){
         for (long id : ids) {
-            System.out.println("getMoviesData id = " + id);
             getMoviesData(String.valueOf(id));
         }
     }
@@ -68,6 +69,12 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_scrolling, menu);
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        retrieveFavs();
     }
 
     @Override
@@ -87,8 +94,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
             segment = "top_rated";
         }else if (id == R.id.sort_fav){
             getSupportActionBar().setTitle("Favorites");
-            System.out.println("favIdList.toString() = " + getFavList().toString());
-            getMoviesData(getFavList());
+            retrieveFavs();
             return super.onOptionsItemSelected(item);
         }
         getMoviesData(segment);
@@ -108,17 +114,14 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
 
     }
 
-    private List<Long> getFavList() {
-        final List<Long> favIdList = new ArrayList<>();
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+    private void retrieveFavs(){
+        final LiveData<List<Long>> ids = appDb.favoriteDao().findAllIds();
+        ids.observe(this, new Observer<List<Long>>() {
             @Override
-            public void run() {
-                favIdList.addAll(appDb.favoriteDao().findAllIds());
+            public void onChanged(@Nullable List<Long> ids) {
+                getMoviesData(ids);
             }
         });
-        System.out.println("getFavList after = " + favIdList);
-        return favIdList;
     }
-
 }
 
