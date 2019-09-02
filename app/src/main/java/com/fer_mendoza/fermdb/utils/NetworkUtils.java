@@ -11,7 +11,9 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class NetworkUtils {
+final public class NetworkUtils {
+
+    private NetworkUtils() {}
 
     public static URL parseURL(String url, HashMap<String, String> params){
         Uri.Builder builder = new Uri.Builder();
