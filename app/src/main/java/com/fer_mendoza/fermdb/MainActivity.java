@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
     private RecyclerView movieList;
     private MovieAdapter mAdapter;
     private AppDb appDb;
+    private JSONArray favResults = new JSONArray();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +51,20 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
 
     @Override
     public void onTaskCompleted(String jsonString, String type) {
-        parseMovies(jsonString);
+        if(type.equals("favs")){
+            addToResults(jsonString);
+            parseMovies(favResults);
+        }else{
+            parseMovies(jsonString);
+        }
+    }
+
+    public void addToResults(String jsonString){
+        try {
+            favResults.put(new JSONObject(jsonString));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public void getMoviesData(String segment){
@@ -60,7 +74,8 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
 
     public void getMoviesData(List<Long> ids){
         for (long id : ids) {
-            getMoviesData(String.valueOf(id));
+            ApiTask apiTask = new ApiTask(MainActivity.this, "favs");
+            apiTask.execute(NetworkUtils.parseURL("api.themoviedb.org/3/movie/"+id, params));
         }
     }
 
@@ -74,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
     @Override
     protected void onResume() {
         super.onResume();
-        retrieveFavs();
+        favResults = new JSONArray();
     }
 
     @Override
@@ -105,13 +120,16 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted {
         JSONObject movieDataJson;
         try {
             movieDataJson = new JSONObject(jsonString);
-            JSONArray movieDataArray = movieDataJson.getJSONArray("results");
-            mAdapter = new MovieAdapter(10, movieDataArray);
+            mAdapter = new MovieAdapter(10, movieDataJson.getJSONArray("results"));
             movieList.setAdapter(mAdapter);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
 
+    private void parseMovies(JSONArray favResults) {
+        mAdapter = new MovieAdapter(10, favResults);
+        movieList.setAdapter(mAdapter);
     }
 
     private void retrieveFavs(){
